@@ -1,3 +1,4 @@
+import os
 import glob
 import cv2
 from SerializeFrameData import *
@@ -43,9 +44,14 @@ def parse_yaml(outfile):
 
 # Input path to "images" folder
 def main():
-    weights_file = input()
-    config_file = input()
     input_path = input()
     images_folder = glob.glob(input_path + "/*.png")
     set_yaml_representer()
-    parse_images(input_path, images_folder, VehicleDetector(weights_file, config_file), OUTPUT_FILE)
+    parse_images(input_path,
+                 images_folder,
+                 VehicleDetector(os.environ['YOLO_WEIGHTS'], os.environ['YOLO_CONFIG']),
+                 OUTPUT_FILE)
+
+
+if __name__ == "__main__":
+    main()
