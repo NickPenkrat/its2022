@@ -19,3 +19,13 @@ class Rectangle:
     def is_similar_to(self, rect_b, th=0.5):
         intersection = self.get_intersection(rect_b)
         return (intersection.area / self.area) >= th and (intersection.area / rect_b.area) >= th
+
+    def get_max_intersection(self, dictionary):
+        max_key = None
+        max_rectangle = Rectangle([0, 0, 0, 0])
+        for key in dictionary.keys():
+            current_rectangle = self.get_intersection(Rectangle(dictionary[key][-1]))
+            if current_rectangle.area > max_rectangle.area:
+                max_rectangle = current_rectangle
+                max_key = key
+        return max_key

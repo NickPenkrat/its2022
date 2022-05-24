@@ -7,19 +7,20 @@ class TrackBuilder:
         self.object_count = 0
 
     def add_new_object(self, framedata, index):
-        object_id = "object_" + str(self.object_count + 1)
+        object_id = str(self.object_count + 1)
         framedata.box_objects.append(object_id)
         self.track_storage[object_id] = [framedata.boxes[index]]
         self.object_count += 1
 
     def add_to_object(self, framedata, index):
-        for obj in self.track_storage.keys():
-            last_rect = self.track_storage[obj][-1]
-            if Rectangle(framedata.boxes[index]).is_similar_to(Rectangle(last_rect), th=0.1):
-                framedata.box_objects.append(obj)
-                self.track_storage[obj].append(framedata.boxes[index])
-                return True
-        return False
+        rectangle = Rectangle(framedata.boxes[index])
+        max_key = rectangle.get_max_intersection(self.track_storage)
+        if max_key is None:
+            return False
+        else:
+            framedata.box_objects.append(max_key)
+            self.track_storage[max_key].append(framedata.boxes[index])
+            return True
 
     def build_track(self, framedata, previous_framedata=None):
         if len(self.track_storage) == 0:
@@ -27,9 +28,10 @@ class TrackBuilder:
                 self.add_new_object(framedata, i)
         else:
             for i in range(framedata.box_count):
+                rectangle = Rectangle(framedata.boxes[i])
                 count = 0
                 for j in range(previous_framedata.box_count):
-                    if Rectangle(framedata.boxes[i]).is_similar_to(Rectangle(previous_framedata.boxes[j])):
+                    if rectangle.is_similar_to(Rectangle(previous_framedata.boxes[j])):
                         framedata.box_objects.append(previous_framedata.box_objects[j])
                         self.track_storage[previous_framedata.box_objects[j]].append(framedata.boxes[i])
                     else:

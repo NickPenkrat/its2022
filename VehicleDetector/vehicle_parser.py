@@ -25,8 +25,9 @@ def get_image_data(image, vehicle_detector, name, previous_frame, trackbuilder):
 
     for box in vehicle_boxes:
         x, y, w, h = box
-        local_rectangles.append([int(x), int(y), int(w), int(h)])
-        cv2.rectangle(image, (x, y), (x + w, y + h), (25, 0, 180), 2)
+        if int(w) * int(h) >= 300:
+            local_rectangles.append([int(x), int(y), int(w), int(h)])
+            cv2.rectangle(image, (x, y), (x + w, y + h), (25, 0, 180), 2)
 
     framedata = FrameData(name, len(local_rectangles), local_rectangles)
     if previous_frame is None:
