@@ -23,4 +23,6 @@ class FrameData(object):
         print('name: ' + str(self.name))
         print('box count: ' + str(self.box_count))
         print('boxes: ' + str(self.boxes))
-        print('box_objects: ' + str(self.box_objects))
+        print('box_objects:')
+        for box in self.box_objects:
+            box.print_data()

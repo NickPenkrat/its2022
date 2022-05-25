@@ -55,12 +55,6 @@ def parse_images(input_path, images_folder, vehicle_detector, outfile_path, trac
         index += 1
 
 
-# Deserializes data from yaml
-def parse_yaml(outfile):
-    deserialized_data = []
-    deserialize_data(outfile, deserialized_data)
-
-
 # Input path to "images" folder
 def main():
     input_path = input()

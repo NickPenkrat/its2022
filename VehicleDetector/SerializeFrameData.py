@@ -42,6 +42,8 @@ def deserialize_data(outfile, frame_list):
         new_frame = FrameData(dictionary["name"],
                               dictionary["box_count"],
                               dictionary["boxes"])
-        new_frame.set_box_objects(dictionary["box_objects"])
+        box_objects = []
+        for box in dictionary["box_objects"]:
+            box_objects.append(Vehicle(box["id"], box["isClosed"]))
+        new_frame.set_box_objects(box_objects)
         frame_list.append(new_frame)
-        print(new_frame.name + "deserialized")
