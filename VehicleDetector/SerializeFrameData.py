@@ -1,11 +1,13 @@
 import yaml
 from FrameData import FrameData
+from Vehicle import Vehicle
 
 TO_SAVE_DATA = "yaml_files/to_save_data.yaml"
 
 
 def set_yaml_representer():
     yaml.add_representer(FrameData, yaml_equivalent_of_default)
+    yaml.add_representer(Vehicle, yaml_equivalent_of_default)
 
 
 def yaml_equivalent_of_default(dumper, data):
@@ -40,5 +42,6 @@ def deserialize_data(outfile, frame_list):
         new_frame = FrameData(dictionary["name"],
                               dictionary["box_count"],
                               dictionary["boxes"])
+        new_frame.set_box_objects(dictionary["box_objects"])
         frame_list.append(new_frame)
         print(new_frame.name + "deserialized")

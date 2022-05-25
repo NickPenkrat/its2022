@@ -1,3 +1,4 @@
+from Vehicle import Vehicle
 from Rectangle import Rectangle
 
 
@@ -8,8 +9,9 @@ class TrackBuilder:
 
     def add_new_object(self, framedata, index):
         object_id = str(self.object_count + 1)
-        framedata.box_objects.append(object_id)
-        self.track_storage[object_id] = [framedata.boxes[index]]
+        vehicle = Vehicle(object_id)
+        framedata.box_objects.append(vehicle)
+        self.track_storage[vehicle] = [framedata.boxes[index]]
         self.object_count += 1
 
     def add_to_object(self, framedata, index):

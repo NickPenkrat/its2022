@@ -15,7 +15,7 @@ def extract_name(input_path_len, image_path):
 def write_objects(image, framedata):
     for i in range(framedata.box_count):
         org = (framedata.boxes[i][0], framedata.boxes[i][1])
-        cv2.putText(image, framedata.box_objects[i], org, cv2.FONT_HERSHEY_SIMPLEX, 1, (25, 0, 180))
+        cv2.putText(image, framedata.box_objects[i].get_id(), org, cv2.FONT_HERSHEY_SIMPLEX, 1, (25, 0, 180))
 
 
 # Extracts image data as dataclass

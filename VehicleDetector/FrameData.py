@@ -16,6 +16,9 @@ class FrameData(object):
         d['box_objects'] = self.box_objects
         return d
 
+    def set_box_objects(self, box_objects):
+        self.box_objects = box_objects
+
     def print_frame_data(self):
         print('name: ' + str(self.name))
         print('box count: ' + str(self.box_count))
