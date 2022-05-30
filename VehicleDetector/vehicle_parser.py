@@ -58,13 +58,21 @@ def parse_images(input_path, images_folder, vehicle_detector, outfile_path, trac
 
 # Input path to "images" folder
 def main():
+    if os.path.getsize(OUTPUT_FILE) == 0:
+        with open(OUTPUT_FILE, 'w') as f:
+            f.write('[]')
+    print("Input path to images folder: ")
     input_path = input()
+    print("Input path to YOLO weights: ")
+    YOLO_WEIGHTS = input()
+    print("Input path to YOLO config")
+    YOLO_CONFIG = input()
     images_folder = glob.glob(input_path + "/*.png")
     set_yaml_representer()
     trackbuilder = TrackBuilder()
     parse_images(input_path,
                  images_folder,
-                 VehicleDetector(os.environ['YOLO_WEIGHTS'], os.environ['YOLO_CONFIG']),
+                 VehicleDetector(YOLO_WEIGHTS, YOLO_CONFIG),
                  OUTPUT_FILE,
                  trackbuilder)
 
