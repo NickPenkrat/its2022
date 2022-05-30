@@ -1,9 +1,12 @@
+MAXIMAL_FRAME_DISTANCE = 15
+
+
 class Rectangle:
     def __init__(self, args):
-        self.x = args[0]
-        self.y = args[1]
-        self.w = args[2]
-        self.h = args[3]
+        self.x = int(args[0])
+        self.y = int(args[1])
+        self.w = int(args[2])
+        self.h = int(args[3])
         self.area = self.w * self.h
 
     def get_intersection(self, rect_b):
@@ -20,12 +23,27 @@ class Rectangle:
         intersection = self.get_intersection(rect_b)
         return (intersection.area / self.area) >= th and (intersection.area / rect_b.area) >= th
 
-    def get_max_intersection(self, dictionary):
+    def is_track_to(self, rectangle):
+        return self.y <= rectangle.y
+
+    def get_max_intersection(self, dictionary, current_frame):
         max_key = None
         max_rectangle = Rectangle([0, 0, 0, 0])
         for key in dictionary.keys():
             current_rectangle = self.get_intersection(Rectangle(dictionary[key][-1]))
-            if current_rectangle.area > max_rectangle.area:
+            if current_rectangle.area > max_rectangle.area \
+                    and self.is_track_to(current_rectangle) \
+                    and current_frame - key.frames[-1] < MAXIMAL_FRAME_DISTANCE:
                 max_rectangle = current_rectangle
                 max_key = key
         return max_key
+
+    def get_max_intersection_array(self, array):
+        max_index = -1
+        max_rectangle = Rectangle([0, 0, 0, 0])
+        for i in range(len(array)):
+            current_rectangle = self.get_intersection(Rectangle(array[i]))
+            if current_rectangle.area > max_rectangle.area and self.is_track_to(current_rectangle):
+                max_rectangle = current_rectangle
+                max_index = i
+        return max_index

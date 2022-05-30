@@ -5,6 +5,7 @@ from SerializeFrameData import *
 from TrackBuilder import TrackBuilder
 from vehicle_detector import VehicleDetector
 
+MINIMAL_AREA = 300
 OUTPUT_FILE = "yaml_files/output.yaml"
 
 
@@ -19,23 +20,23 @@ def write_objects(image, framedata):
 
 
 # Extracts image data as dataclass
-def get_image_data(image, vehicle_detector, name, previous_frame, trackbuilder):
+def get_image_data(index, image, vehicle_detector, name, previous_frame, trackbuilder):
     vehicle_boxes = vehicle_detector.detect_vehicles(image)
     local_rectangles = []
 
     for box in vehicle_boxes:
         x, y, w, h = box
-        if int(w) * int(h) >= 300:
+        if int(w) * int(h) >= MINIMAL_AREA:
             local_rectangles.append([int(x), int(y), int(w), int(h)])
             cv2.rectangle(image, (x, y), (x + w, y + h), (25, 0, 180), 2)
 
-    framedata = FrameData(name, len(local_rectangles), local_rectangles)
+    framedata = FrameData(index + 1, name, len(local_rectangles), local_rectangles)
     if previous_frame is None:
         trackbuilder.build_track(framedata)
     else:
         trackbuilder.build_track(framedata, previous_frame)
     write_objects(image, framedata)
-    cv2.imwrite('output/' + 'parsed_' + name[:-4] + '.jpg', image)
+    cv2.imwrite('output/' + 'parsed_' + name, image)
     return framedata
 
 
@@ -45,7 +46,7 @@ def parse_images(input_path, images_folder, vehicle_detector, outfile_path, trac
     for image_path in images_folder:
         print("Currently parsing: " + str(image_path))
         image = cv2.imread(image_path)
-        frameData = get_image_data(image,
+        frameData = get_image_data(index, image,
                                    vehicle_detector,
                                    extract_name(len(input_path) + 1, image_path),
                                    previous_frame,

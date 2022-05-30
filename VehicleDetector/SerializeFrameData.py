@@ -39,11 +39,19 @@ def deserialize_data(outfile, frame_list):
     with open(outfile, 'r') as f:
         file_data = yaml.safe_load(f)
     for dictionary in file_data:
-        new_frame = FrameData(dictionary["name"],
+        new_frame = FrameData(dictionary["number"],
+                              dictionary["name"],
                               dictionary["box_count"],
                               dictionary["boxes"])
         box_objects = []
         for box in dictionary["box_objects"]:
-            box_objects.append(Vehicle(box["id"], box["isClosed"]))
+            box_objects.append(Vehicle(box["vehicle_id"]))
         new_frame.set_box_objects(box_objects)
         frame_list.append(new_frame)
+
+
+# Deserializes data from yaml
+def parse_yaml(file_path):
+    deserialized_data = []
+    deserialize_data(file_path, deserialized_data)
+    return deserialized_data
