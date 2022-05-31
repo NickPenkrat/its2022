@@ -1,13 +1,16 @@
 class Vehicle:
     def __init__(self, object_id):
         self.vehicle_id = object_id
-        self.frames = []
+        self.last_frame = None
+
+    def get_last_frame(self):
+        return self.last_frame
 
     def get_id(self):
         return self.vehicle_id
 
-    def add_frame(self, frame):
-        self.frames.append(frame)
+    def set_last_frame(self, frame):
+        self.last_frame = frame
 
     def print_data(self, end_sign='\n'):
         print("vehicle_id: " + self.vehicle_id, end=end_sign)

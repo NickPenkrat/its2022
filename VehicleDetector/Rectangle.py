@@ -33,7 +33,7 @@ class Rectangle:
             current_rectangle = self.get_intersection(Rectangle(dictionary[key][-1]))
             if current_rectangle.area > max_rectangle.area \
                     and self.is_track_to(current_rectangle) \
-                    and current_frame - key.frames[-1] < MAXIMAL_FRAME_DISTANCE:
+                    and current_frame - key.get_last_frame() < MAXIMAL_FRAME_DISTANCE:
                 max_rectangle = current_rectangle
                 max_key = key
         return max_key

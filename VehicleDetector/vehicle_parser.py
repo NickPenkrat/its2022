@@ -72,7 +72,7 @@ def main():
     trackbuilder = TrackBuilder()
     parse_images(input_path,
                  images_folder,
-                 VehicleDetector(YOLO_WEIGHTS, YOLO_CONFIG),
+                 VehicleDetector(os.environ["YOLO_WEIGHTS"], os.environ["YOLO_CONFIG"]),
                  OUTPUT_FILE,
                  trackbuilder)
 

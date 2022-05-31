@@ -10,7 +10,7 @@ class TrackBuilder:
     def add_new_object(self, framedata, index):
         object_id = str(self.object_count + 1)
         vehicle = Vehicle(object_id)
-        vehicle.add_frame(framedata.number)
+        vehicle.set_last_frame(framedata.number)
         framedata.box_objects.append(vehicle)
         self.track_storage[vehicle] = [framedata.boxes[index]]
         self.object_count += 1
@@ -21,7 +21,7 @@ class TrackBuilder:
         if max_key is None:
             return False
         else:
-            max_key.add_frame(framedata.number)
+            max_key.set_last_frame(framedata.number)
             framedata.box_objects.append(max_key)
             self.track_storage[max_key].append(framedata.boxes[index])
             return True
@@ -40,7 +40,7 @@ class TrackBuilder:
                     if not self.add_to_object(framedata, i):
                         self.add_new_object(framedata, i)
                 else:
-                    max_key.add_frame(framedata.number)
+                    max_key.set_last_frame(framedata.number)
                     framedata.box_objects.append(max_key)
                     self.track_storage[max_key].append(framedata.boxes[i])
 
