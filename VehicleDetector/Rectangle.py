@@ -1,4 +1,4 @@
-MAXIMAL_FRAME_DISTANCE = 15
+MAXIMAL_FRAME_DISTANCE = 10
 
 
 class Rectangle:
@@ -8,6 +8,15 @@ class Rectangle:
         self.w = int(args[2])
         self.h = int(args[3])
         self.area = self.w * self.h
+
+    def to_serialize(self):
+        return {
+            "x": self.x,
+            "y": self.y,
+            "w": self.w,
+            "h": self.h,
+            "area": self.area
+        }
 
     def get_intersection(self, rect_b):
         x = max(self.x, rect_b.x)
@@ -26,24 +35,17 @@ class Rectangle:
     def is_track_to(self, rectangle):
         return self.y <= rectangle.y
 
-    def get_max_intersection(self, dictionary, current_frame):
-        max_key = None
+    def get_max_intersection(self, boxes, current_frame_name):
+        max_box = None
         max_rectangle = Rectangle([0, 0, 0, 0])
-        for key in dictionary.keys():
-            current_rectangle = self.get_intersection(Rectangle(dictionary[key][-1]))
-            if current_rectangle.area > max_rectangle.area \
-                    and self.is_track_to(current_rectangle) \
-                    and current_frame - key.get_last_frame() < MAXIMAL_FRAME_DISTANCE:
+        for box in boxes:
+            current_rectangle = self.get_intersection(box.rectangle)
+            if current_rectangle.area > max_rectangle.area\
+                    and self.is_track_to(current_rectangle)\
+                    and int(current_frame_name[6:-4]) - int(box.frame[6:-4]) < MAXIMAL_FRAME_DISTANCE:
                 max_rectangle = current_rectangle
-                max_key = key
-        return max_key
+                max_box = box
+        return max_box
 
-    def get_max_intersection_array(self, array):
-        max_index = -1
-        max_rectangle = Rectangle([0, 0, 0, 0])
-        for i in range(len(array)):
-            current_rectangle = self.get_intersection(Rectangle(array[i]))
-            if current_rectangle.area > max_rectangle.area and self.is_track_to(current_rectangle):
-                max_rectangle = current_rectangle
-                max_index = i
-        return max_index
+    def print_data(self):
+        print("x: " + str(self.x) + ", y: " + str(self.y) + ", w: " + str(self.w) + ", h: " + str(self.h))

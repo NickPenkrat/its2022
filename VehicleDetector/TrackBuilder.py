@@ -1,48 +1,43 @@
-from Vehicle import Vehicle
-from Rectangle import Rectangle
-
-
 class TrackBuilder:
     def __init__(self):
+        # {id: [all the boxes with this id]}
         self.track_storage = {}
         self.object_count = 0
 
-    def add_new_object(self, framedata, index):
-        object_id = str(self.object_count + 1)
-        vehicle = Vehicle(object_id)
-        vehicle.set_last_frame(framedata.number)
-        framedata.box_objects.append(vehicle)
-        self.track_storage[vehicle] = [framedata.boxes[index]]
+    def to_serialize(self):
+        d = {}
+        for key in self.track_storage.keys():
+            d[key] = [box.to_serialize() for box in self.track_storage[key]]
+        return d
+
+    def add_new_object(self, box):
+        self.track_storage[box.object_id] = [box]
         self.object_count += 1
 
-    def add_to_object(self, framedata, index):
-        rectangle = Rectangle(framedata.boxes[index])
-        max_key = rectangle.get_max_intersection(self.track_storage, framedata.number)
-        if max_key is None:
+    def add_to_object(self, box):
+        rectangle = box.rectangle
+        last_boxes = [self.track_storage[key][-1] for key in self.track_storage.keys()]
+        max_box = rectangle.get_max_intersection(last_boxes, box.frame)
+        if max_box is None:
             return False
         else:
-            max_key.set_last_frame(framedata.number)
-            framedata.box_objects.append(max_key)
-            self.track_storage[max_key].append(framedata.boxes[index])
+            box.change_id(max_box.object_id)
+            self.track_storage[max_box.object_id].append(box)
             return True
 
     def build_track(self, framedata, previous_framedata=None):
         if len(self.track_storage) == 0:
-            for i in range(framedata.box_count):
-                self.add_new_object(framedata, i)
+            for box in framedata.boxes:
+                self.add_new_object(box)
         else:
-            for i in range(framedata.box_count):
-                rectangle = Rectangle(framedata.boxes[i])
-                max_index = rectangle.get_max_intersection_array(previous_framedata.boxes)
-                max_key = previous_framedata.box_objects[max_index]
-                if max_index == -1 \
-                        or not rectangle.is_similar_to(Rectangle(previous_framedata.boxes[max_index])):
-                    if not self.add_to_object(framedata, i):
-                        self.add_new_object(framedata, i)
+            for box in framedata.boxes:
+                rectangle = box.rectangle
+                max_box = rectangle.get_max_intersection(previous_framedata.boxes, box.frame)
+                if max_box is None \
+                        or not rectangle.is_similar_to(max_box.rectangle):
+                    if not self.add_to_object(box):
+                        self.add_new_object(box)
                 else:
-                    max_key.set_last_frame(framedata.number)
-                    framedata.box_objects.append(max_key)
-                    self.track_storage[max_key].append(framedata.boxes[i])
-
-    def print_track_storage(self):
-        print(self.track_storage)
+                    box.change_id(max_box.object_id)
+                    self.track_storage[max_box.object_id].append(box)
+        return framedata
