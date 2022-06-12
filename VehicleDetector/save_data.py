@@ -1,6 +1,5 @@
 import cv2
 import yaml
-from yaml_parser import OUTPUT_FILE
 from FrameData import FrameData
 from Box import Box
 from Rectangle import Rectangle
@@ -45,8 +44,9 @@ def save_framedata(images_folder, framedata_storage, output_folder):
 
 
 def main():
-    images_folder = input()
-    save_framedata(images_folder, deserialize_framedata(OUTPUT_FILE), "output")
+    images_folder = input("Input path to images folder: ")
+    output_file = input("Input path to YAML file: ")
+    save_framedata(images_folder, deserialize_framedata(output_file), "output")
 
 
 if __name__ == "__main__":

@@ -116,7 +116,7 @@ def deserialize_track(outfile):
 
 def main():
     set_yaml_representer()
-    input_folder = input()
+    input_folder = input("Input path to detect data folder: ")
     trackbuilder = TrackBuilder()
     yaml_folder = glob.glob(input_folder + "/*.yml")
     framedata_storage = parse_frame_data(yaml_folder, trackbuilder, input_folder)
