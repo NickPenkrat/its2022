@@ -3,6 +3,7 @@ import yaml
 from FrameData import FrameData
 from Box import Box
 from Rectangle import Rectangle
+import random
 
 
 def deserialize_framedata(outfile):
@@ -28,7 +29,10 @@ def deserialize_framedata(outfile):
 
 def write_box(image, box):
     rect = box.rectangle
-    cv2.rectangle(image, (rect.x, rect.y), (rect.x + rect.w, rect.y + rect.h), (25, 0, 180), 1)
+    obj_id = int(box.object_id)
+    random.seed(obj_id)
+    color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    cv2.rectangle(image, (rect.x, rect.y), (rect.x + rect.w, rect.y + rect.h), color, 1)
     org = (rect.x, rect.y - 5)
     cv2.putText(image, str(box.object_id), org, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (25, 0, 180), 1)
 
