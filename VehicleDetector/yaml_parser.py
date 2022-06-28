@@ -8,7 +8,7 @@ from TrackBuilder import TrackBuilder
 OUTPUT_TRACK_FILE = "yaml_files/output_track_storage.yaml"
 OUTPUT_FILE = "yaml_files/output.yaml"
 TO_SAVE_DATA = "yaml_files/to_save_data.yaml"
-MINIMAL_AREA = 300
+MINIMAL_AREA = 700
 
 
 def set_yaml_representer():
